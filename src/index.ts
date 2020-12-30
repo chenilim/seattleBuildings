@@ -1,4 +1,5 @@
 import * as Chart from 'chart.js'
+import { create } from 'domain'
 
 let rows: any
 let allItems: any[]
@@ -36,22 +37,50 @@ function group(items: any[], mapper: (_:any) => any) {
 async function main() {
     await loadData()
 
-    const items = allItems.filter((o: any) => o.permitClass === 'Residential' && o.completedDate !== null)
-    console.log(`${items.length} filtered items`)
-
-    const dates = items.map((o: any) => o.completedDate)
-        .filter(o => o)
-
-    const minDate = dates.reduce(function (a, b) { return a < b ? a : b })
-    const maxDate = dates.reduce(function (a, b) { return a > b ? a : b })
-
-    console.log(`minDate: ${minDate}`)
-    console.log(`maxDate: ${maxDate}`)
-
-    const permitClasses = group(allItems, o => o.permitSubClass)
+    console.log('Permit classes:')
+    const permitClasses = group(allItems, o => o.permitClass + '-' + o.permitSubClass)
     for (const key of permitClasses.keys()) {
         console.log(`${key}: ${permitClasses.get(key)}`)
     }
+
+    console.log('Permit types:')
+    const permitTypes = group(allItems, o => o.permitType + '-' + o.permitSubType)
+    for (const key of permitTypes.keys()) {
+        console.log(`${key}: ${permitTypes.get(key)}`)
+    }
+
+    {
+        const items = allItems.filter((o: any) => o.permitSubClass === 'Commercial' && o.completedDate !== null)
+        createChart(items, 'All Commercial')
+    }
+
+    {
+        const items = allItems.filter((o: any) => o.permitClass === 'Residential' && o.completedDate !== null)
+        createChart(items, 'All Residential')
+    }
+
+    // const items = allItems.filter((o: any) => o.permitSubClass === 'Single Family/Duplex' && o.completedDate !== null)
+    {
+        const items = allItems.filter((o: any) =>
+            o.permitClass === 'Residential' &&
+            o.permitType === 'Building' &&
+            o.permitSubType === 'New' &&
+            o.completedDate !== null)
+        createChart(items, 'Residential New Construction')
+    }
+}
+
+function createChart(items: any[], title: string) {
+    console.log(`${title}: ${items.length} items`)
+
+    // const dates = items.map((o: any) => o.completedDate)
+    //     .filter(o => o)
+
+    // const minDate = dates.reduce(function (a, b) { return a < b ? a : b })
+    // const maxDate = dates.reduce(function (a, b) { return a > b ? a : b })
+
+    // console.log(`minDate: ${minDate}`)
+    // console.log(`maxDate: ${maxDate}`)
 
     let grouped = new Map()
     for (const item of items) {
@@ -71,13 +100,14 @@ async function main() {
     // }
 
     const canvas = document.createElement('canvas')
+    canvas.style.maxWidth = '800px'
+    canvas.style.maxHeight = '500px'
     document.body.appendChild(canvas)
     const ctx = canvas.getContext('2d')!
 
     const chartData: Chart.ChartData = {
         labels: keys.map(o => new Date(o).toDateString()),
         datasets: [{
-            label: 'Completed',
             backgroundColor: Chart.helpers.color('#505090').alpha(0.5).rgbString(),
             borderColor: '#505090',
             borderWidth: 1,
@@ -90,12 +120,21 @@ async function main() {
         data: chartData,
         options: {
             responsive: true,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            },
             legend: {
                 position: 'top',
+                display: false,
             },
             title: {
                 display: true,
-                text: 'Buildings'
+                text: title
             }
         }
     }

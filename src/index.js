@@ -13,7 +13,7 @@ async function loadData() {
         permitSubType: r[12],
         description: r[13],
         completed: r[21],
-        completedDate: new Date(r[21]),
+        completedDate: r[21] && new Date(r[21]),
         status: r[22]
     }))
 
@@ -23,8 +23,11 @@ async function loadData() {
 async function main() {
     await loadData()
 
-    const minDate = items.reduce(function (a, b) { return a.completedDate < b.completedDate ? a.completedDate : b.completedDate })
-    const maxDate = items.reduce(function (a, b) { return a.completedDate > b.completedDate ? a.completedDate : b.completedDate })
+    const dates = items.map(o => o.completedDate)
+        .filter(o => o)
+
+    const minDate = dates.reduce(function (a, b) { return a < b ? a : b })
+    const maxDate = dates.reduce(function (a, b) { return a > b ? a : b })
 
     console.log(`minDate: ${minDate}`)
     console.log(`maxDate: ${maxDate}`)

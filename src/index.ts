@@ -1,12 +1,12 @@
-let rows
-let allItems
+let rows: any
+let allItems: any[]
 
-async function loadData() {
+async function loadData(): Promise<void> {
     const url = './rows.json'
     const response = await fetch(url)
     rows = await response.json()
 
-    allItems = rows.data.map(r => ({
+    allItems = rows.data.map((r: any) => ({
         permitSubClass: r[9],
         permitClass: r[10],
         permitType: r[11],
@@ -20,7 +20,7 @@ async function loadData() {
     console.log(`Loaded ${allItems.length} rows.`)
 }
 
-function group(items, mapper) {
+function group(items: any[], mapper: (_:any) => any) {
     let counts = new Map()
     for (const item of items) {
         const key = mapper(item)
@@ -34,10 +34,10 @@ function group(items, mapper) {
 async function main() {
     await loadData()
 
-    const items = allItems.filter(o => o.permitClass === 'Residential' && o.completedDate !== null)
+    const items = allItems.filter((o: any) => o.permitClass === 'Residential' && o.completedDate !== null)
     console.log(`${items.length} filtered items`)
 
-    const dates = items.map(o => o.completedDate)
+    const dates = items.map((o: any) => o.completedDate)
         .filter(o => o)
 
     const minDate = dates.reduce(function (a, b) { return a < b ? a : b })
@@ -47,12 +47,12 @@ async function main() {
     console.log(`maxDate: ${maxDate}`)
 
     const permitClasses = group(allItems, o => o.permitSubClass)
-    for (key of permitClasses.keys()) {
+    for (const key of permitClasses.keys()) {
         console.log(`${key}: ${permitClasses.get(key)}`)
     }
 
     let yearCounts = new Map()
-    for (item of items) {
+    for (const item of items) {
         const year = item.completedDate.getFullYear()
         const yearCount = yearCounts.get(year)
         if (yearCount) {
@@ -63,7 +63,7 @@ async function main() {
     }
 
     const years = [...yearCounts.keys()].sort((a, b) => a - b)
-    for (year of years) {
+    for (const year of years) {
         const count = yearCounts.get(year)
         console.log(`${year}: ${count}`)
     }

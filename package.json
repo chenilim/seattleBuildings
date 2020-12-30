@@ -1,12 +1,25 @@
 {
-  "name": "seattleBuilding",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": ""
+	"name": "seattle-building",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "webpack-dev-server --port 9000 --inline --progress --profile --colors --watch --content-base src/ --mode development",
+		"build": "webpack --config webpack.config.js --mode development",
+		"build.prod": "webpack --config webpack.config.js --mode production",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "",
+	"dependencies": {
+		"chart.js": "^2.9.4"
+	},
+	"devDependencies": {
+		"copy-webpack-plugin": "^7.0.0",
+		"html-webpack-plugin": "^4.5.0",
+		"ts-loader": "^8.0.12",
+		"webpack": "^5.11.1",
+		"webpack-cli": "^4.3.0"
+	}
 }

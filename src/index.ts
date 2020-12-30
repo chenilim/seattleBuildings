@@ -65,10 +65,10 @@ async function main() {
     }
 
     const keys = [...grouped.keys()].sort((a, b) => a - b)
-    for (const key of keys) {
-        const count = grouped.get(key)
-        console.log(`${new Date(key).toDateString()}: ${count}`)
-    }
+    // for (const key of keys) {
+    //     const count = grouped.get(key)
+    //     console.log(`${new Date(key).toDateString()}: ${count}`)
+    // }
 
     const canvas = document.createElement('canvas')
     document.body.appendChild(canvas)

@@ -1,5 +1,4 @@
 import * as Chart from 'chart.js'
-import { create } from 'domain'
 
 let rows: any
 let allItems: any[]
@@ -23,7 +22,7 @@ async function loadData(): Promise<void> {
     console.log(`Loaded ${allItems.length} rows.`)
 }
 
-function group(items: any[], mapper: (_:any) => any) {
+function group(items: any[], mapper: (_: any) => any) {
     let counts = new Map()
     for (const item of items) {
         const key = mapper(item)
@@ -52,6 +51,15 @@ async function main() {
     {
         const items = allItems.filter((o: any) => o.permitSubClass === 'Commercial' && o.completedDate !== null)
         createChart(items, 'All Commercial')
+    }
+
+    {
+        const items = allItems.filter((o: any) =>
+            o.permitSubClass === 'Commercial' &&
+            o.permitType === 'Building' &&
+            o.permitSubType === 'New' &&
+            o.completedDate !== null)
+        createChart(items, 'Commercial New Construction')
     }
 
     {

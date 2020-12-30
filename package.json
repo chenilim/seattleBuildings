@@ -6,6 +6,7 @@
 	"scripts": {
 		"start": "webpack-dev-server --port 9000 --inline --progress --profile --colors --watch --content-base src/ --mode development",
 		"build": "webpack --config webpack.config.js --mode development",
+		"watch": "webpack --config webpack.config.js --mode development --watch",
 		"build.prod": "webpack --config webpack.config.js --mode production",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
@@ -16,6 +17,7 @@
 		"chart.js": "^2.9.4"
 	},
 	"devDependencies": {
+		"@types/chart.js": "^2.9.29",
 		"copy-webpack-plugin": "^7.0.0",
 		"html-webpack-plugin": "^4.5.0",
 		"ts-loader": "^8.0.12",

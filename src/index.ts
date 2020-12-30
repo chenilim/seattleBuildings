@@ -1,3 +1,5 @@
+import * as Chart from 'chart.js'
+
 let rows: any
 let allItems: any[]
 
@@ -67,6 +69,38 @@ async function main() {
         const count = yearCounts.get(year)
         console.log(`${year}: ${count}`)
     }
+
+    const canvas = document.createElement('canvas')
+    document.body.appendChild(canvas)
+    const ctx = canvas.getContext('2d')!
+
+    const chartData: Chart.ChartData = {
+        labels: years,
+        datasets: [{
+            label: 'Completed',
+            backgroundColor: Chart.helpers.color('#505090').alpha(0.5).rgbString(),
+            borderColor: '#505090',
+            borderWidth: 1,
+            data: years.map(o => yearCounts.get(o))
+        }]
+    }
+
+    const config: Chart.ChartConfiguration = {
+        type: 'bar',
+        data: chartData,
+        options: {
+            responsive: true,
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Buildings'
+            }
+        }
+    }
+
+    var myChart = new Chart(ctx, config)
 }
 
 main()

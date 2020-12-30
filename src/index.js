@@ -35,19 +35,20 @@ async function main() {
     console.log(`minDate: ${minDate}`)
     console.log(`maxDate: ${maxDate}`)
 
-    let yearCounts = {}
+    let yearCounts = new Map()
     for (item of items) {
         const year = item.completedDate.getFullYear()
-        const yearCount = yearCounts[year]
+        const yearCount = yearCounts.get(year)
         if (yearCount) {
-            yearCounts[year] = yearCount + 1
+            yearCounts.set(year, yearCount + 1)
         } else {
-            yearCounts[year] = 1
+            yearCounts.set(year, 1)
         }
     }
 
-    for (year of Object.keys(yearCounts)) {
-        const count = yearCounts[year]
+    const years = [...yearCounts.keys()].sort((a, b) => a - b)
+    for (year of years) {
+        const count = yearCounts.get(year)
         console.log(`${year}: ${count}`)
     }
 }

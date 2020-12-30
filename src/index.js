@@ -20,6 +20,17 @@ async function loadData() {
     console.log(`Loaded ${allItems.length} rows.`)
 }
 
+function group(items, mapper) {
+    let counts = new Map()
+    for (const item of items) {
+        const key = mapper(item)
+        const count = counts.get(key)
+        counts.set(key, count ? count + 1 : 1)
+    }
+
+    return counts
+}
+
 async function main() {
     await loadData()
 
@@ -34,6 +45,11 @@ async function main() {
 
     console.log(`minDate: ${minDate}`)
     console.log(`maxDate: ${maxDate}`)
+
+    const permitClasses = group(allItems, o => o.permitSubClass)
+    for (key of permitClasses.keys()) {
+        console.log(`${key}: ${permitClasses.get(key)}`)
+    }
 
     let yearCounts = new Map()
     for (item of items) {

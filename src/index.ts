@@ -53,21 +53,21 @@ async function main() {
         console.log(`${key}: ${permitClasses.get(key)}`)
     }
 
-    let yearCounts = new Map()
+    let grouped = new Map()
     for (const item of items) {
-        const year = item.completedDate.getFullYear()
-        const yearCount = yearCounts.get(year)
-        if (yearCount) {
-            yearCounts.set(year, yearCount + 1)
+        const key = new Date(item.completedDate.getFullYear(), item.completedDate.getMonth()).getTime()
+        const count = grouped.get(key)
+        if (count) {
+            grouped.set(key, count + 1)
         } else {
-            yearCounts.set(year, 1)
+            grouped.set(key, 1)
         }
     }
 
-    const years = [...yearCounts.keys()].sort((a, b) => a - b)
-    for (const year of years) {
-        const count = yearCounts.get(year)
-        console.log(`${year}: ${count}`)
+    const keys = [...grouped.keys()].sort((a, b) => a - b)
+    for (const key of keys) {
+        const count = grouped.get(key)
+        console.log(`${new Date(key).toDateString()}: ${count}`)
     }
 
     const canvas = document.createElement('canvas')
@@ -75,13 +75,13 @@ async function main() {
     const ctx = canvas.getContext('2d')!
 
     const chartData: Chart.ChartData = {
-        labels: years,
+        labels: keys.map(o => new Date(o).toDateString()),
         datasets: [{
             label: 'Completed',
             backgroundColor: Chart.helpers.color('#505090').alpha(0.5).rgbString(),
             borderColor: '#505090',
             borderWidth: 1,
-            data: years.map(o => yearCounts.get(o))
+            data: keys.map(o => grouped.get(o))
         }]
     }
 

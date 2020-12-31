@@ -14,16 +14,29 @@ async function loadData(): Promise<void> {
     rows = await response.json()
 
 	console.log(`Parsing JSON...`)
-    allItems = rows.data.map((r: any) => ({
-        permitSubClass: r[9],
-        permitClass: r[10],
-        permitType: r[11],
-        permitSubType: r[12],
-        description: r[13],
-        completed: r[21],
-        completedDate: r[21] && new Date(r[21]),
-        status: r[22]
-    }))
+    allItems = rows.data.map((r: any) => {
+		let link = ''
+		const info = r[28]
+		if (info?.length > 0) {
+			link = info[0]
+		}
+		return {
+			id: r[8],
+			permitSubClass: r[9],
+			permitClass: r[10],
+			permitType: r[11],
+			permitSubType: r[12],
+			description: r[13],
+			completed: r[21],
+			completedDate: r[21] && new Date(r[21]),
+			status: r[22],
+			address: r[23],
+			city: r[24],
+			state: r[25],
+			zip: r[26],
+			link,
+		}
+	})
 
     console.log(`Loaded ${allItems.length} rows.`)
 }

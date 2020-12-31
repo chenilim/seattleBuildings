@@ -1,4 +1,3 @@
 {
-	"editor.formatOnSave": true,
-	"git.postCommitCommand": "sync"
+	"editor.formatOnSave": true
 }

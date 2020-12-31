@@ -67,7 +67,8 @@ async function main() {
 }
 
 function drawChart(permitClass: string, isNew: string) {
-	let items = allItems.filter((o: any) => o.completedDate !== null)
+	let items = allItems.filter((o: any) => o.status === 'Completed' && o.completedDate !== null)
+
 	switch (permitClass) {
 		case 'residential': {
 			items = items.filter(o => o.permitClass === 'Residential')
@@ -148,7 +149,9 @@ function createChart(items: any[], title: string) {
 			const key = keys[index]
 			const group = groups.get(key)
 			if (group) {
-				showGroup(group)
+				const date = new Date(key)
+				const title = date.toDateString()
+				showGroup(group, title)
 			}
 		}
 	}
@@ -197,11 +200,12 @@ function createChart(items: any[], title: string) {
 	}
 }
 
-function showGroup(group: any[]) {
+function showGroup(group: any[], title: string) {
 	console.log(`showGroup ${group.length}`)
 	console.log(group)
 
 	clearLog()
+	log(`${title}, ${group.length} items:\n`)
 	for (const item of group) {
 		log(JSON.stringify(item) + '\n')
 	}

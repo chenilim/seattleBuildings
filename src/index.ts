@@ -3,6 +3,7 @@ import * as Chart from 'chart.js'
 
 let rows: any = []
 let allItems: any[] = []
+let chart: Chart
 
 async function loadData(): Promise<void> {
     const url = './rows.json'
@@ -93,36 +94,6 @@ function drawChart(permitClass: string, isNew: string) {
 	createChart(items, title)
 }
 
-    // {
-    //     const items = allItems.filter((o: any) => o.permitSubClass === 'Commercial' && o.completedDate !== null)
-    //     createChart(items, 'All Commercial')
-    // }
-
-    // {
-    //     const items = allItems.filter((o: any) =>
-    //         o.permitSubClass === 'Commercial' &&
-    //         o.permitType === 'Building' &&
-    //         o.permitSubType === 'New' &&
-    //         o.completedDate !== null)
-    //     createChart(items, 'Commercial New Construction')
-    // }
-
-    // {
-    //     const items = allItems.filter((o: any) => o.permitClass === 'Residential' && o.completedDate !== null)
-    //     createChart(items, 'All Residential')
-    // }
-
-    // const items = allItems.filter((o: any) => o.permitSubClass === 'Single Family/Duplex' && o.completedDate !== null)
-//     {
-//         const items = allItems.filter((o: any) =>
-//             o.permitClass === 'Residential' &&
-//             o.permitType === 'Building' &&
-//             o.permitSubType === 'New' &&
-//             o.completedDate !== null)
-//         createChart(items, 'Residential New Construction')
-//     }
-// }
-
 function createChart(items: any[], title: string) {
     console.log(`${title}: ${items.length} items`)
 
@@ -160,8 +131,8 @@ function createChart(items: any[], title: string) {
     const chartData: Chart.ChartData = {
         labels: keys.map(o => new Date(o).toDateString()),
         datasets: [{
-            backgroundColor: Chart.helpers.color('#505090').alpha(0.5).rgbString(),
-            borderColor: '#505090',
+            backgroundColor: '#505090',
+            // borderColor: '#505090',
             borderWidth: 1,
 			barPercentage: 1.0,
 			categoryPercentage: 1.0,
@@ -186,7 +157,10 @@ function createChart(items: any[], title: string) {
         type: 'bar',
         data: chartData,
         options: {
-            responsive: true,
+			responsive: true,
+			animation: {
+				duration: 0 // general animation time
+			},
             scales: {
                 xAxes: [{
 					stacked: true,
@@ -207,7 +181,20 @@ function createChart(items: any[], title: string) {
         }
     }
 
-    let myChart = new Chart(ctx, config)
+	if (chart) {
+		chart.destroy()
+		chart = new Chart(ctx, config)
+		// chart.data.datasets!.forEach((dataset) => {
+		// 	dataset.data!.pop()
+		// })
+		// config.data!.datasets!.forEach((dataset) => {
+		// 	chart.data!.datasets!.push(dataset)
+		// })
+
+		// chart.update({duration: 0})
+	} else {
+		chart = new Chart(ctx, config)
+	}
 }
 
 function showGroup(group: any[]) {

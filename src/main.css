@@ -1,0 +1,18 @@
+html, body {
+	margin: 0;
+	padding: 0;
+}
+
+.frame {
+	display: flex;
+	flex-direction: column;
+}
+
+.frame > * {
+	display: flex;
+	flex-direction: column;
+}
+
+#main {
+	flex-direction: row;
+}

@@ -1,7 +1,29 @@
 <html>
-    <head>
-        <title>Seattle Building Data Analysis</title>
-    </head>
-    <body>
-    </body>
+
+<head>
+	<title>Seattle Building Data Analysis</title>
+	<link rel='stylesheet' href='main.css' />
+</head>
+
+<body>
+	<div class='frame'>
+		<div id='header'>
+			<select id="selectType">
+				<option value="residential">Residential</option>
+				<option value="non-residential">Non-Residential</option>
+			</select>
+			<select id="selectNew">
+				<option value="new">New</option>
+				<option value="existing">Existing</option>
+				<option value="all">All</option>
+			</select>
+		</div>
+		<div id='main'>
+			<canvas id='mainCanvas'></canvas>
+			<div id='sidebar'></div>
+		</div>
+		<div id='footer'></div>
+	</div>
+</body>
+
 </html>

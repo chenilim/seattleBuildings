@@ -1,7 +1,7 @@
 import * as Chart from 'chart.js'
 
-let rows: any
-let allItems: any[]
+let rows: any = []
+let allItems: any[] = []
 
 async function loadData(): Promise<void> {
     const url = './rows.json'
@@ -33,6 +33,18 @@ function group(items: any[], mapper: (_: any) => any) {
     return counts
 }
 
+function createControls() {
+	const selectClass = document.getElementById('selectType') as HTMLSelectElement
+	selectClass.onchange = (e) => {
+		drawChart(selectClass.value, selectNew.value)
+	}
+
+	const selectNew = document.getElementById('selectNew') as HTMLSelectElement
+	selectNew.onchange = (e) => {
+		drawChart(selectClass.value, selectNew.value)
+	}
+}
+
 async function main() {
     await loadData()
 
@@ -46,37 +58,69 @@ async function main() {
     const permitTypes = group(allItems, o => o.permitType + '-' + o.permitSubType)
     for (const key of permitTypes.keys()) {
         console.log(`${key}: ${permitTypes.get(key)}`)
-    }
+	}
 
-    {
-        const items = allItems.filter((o: any) => o.permitSubClass === 'Commercial' && o.completedDate !== null)
-        createChart(items, 'All Commercial')
-    }
+	createControls()
+	drawChart('residential', 'new')
+}
 
-    {
-        const items = allItems.filter((o: any) =>
-            o.permitSubClass === 'Commercial' &&
-            o.permitType === 'Building' &&
-            o.permitSubType === 'New' &&
-            o.completedDate !== null)
-        createChart(items, 'Commercial New Construction')
-    }
+function drawChart(permitClass: string, isNew: string) {
+	let items = allItems.filter((o: any) => o.completedDate !== null)
+	switch (permitClass) {
+		case 'residential': {
+			items = items.filter(o => o.permitClass === 'Residential')
+			break
+		}
+		case 'non-residential': {
+			items = items.filter(o => o.permitClass === 'Non-Residential')
+			break
+		}
+	}
 
-    {
-        const items = allItems.filter((o: any) => o.permitClass === 'Residential' && o.completedDate !== null)
-        createChart(items, 'All Residential')
-    }
+	switch (isNew) {
+		case 'new': {
+			items = items.filter(o => o.permitSubType === 'New')
+			break
+		}
+		case 'existing': {
+			items = items.filter(o => o.permitSubType !== 'New')
+			break
+		}
+	}
+
+	const title = `${isNew.charAt(0).toUpperCase() + isNew.slice(1)} ${permitClass}`
+	createChart(items, title)
+}
+
+    // {
+    //     const items = allItems.filter((o: any) => o.permitSubClass === 'Commercial' && o.completedDate !== null)
+    //     createChart(items, 'All Commercial')
+    // }
+
+    // {
+    //     const items = allItems.filter((o: any) =>
+    //         o.permitSubClass === 'Commercial' &&
+    //         o.permitType === 'Building' &&
+    //         o.permitSubType === 'New' &&
+    //         o.completedDate !== null)
+    //     createChart(items, 'Commercial New Construction')
+    // }
+
+    // {
+    //     const items = allItems.filter((o: any) => o.permitClass === 'Residential' && o.completedDate !== null)
+    //     createChart(items, 'All Residential')
+    // }
 
     // const items = allItems.filter((o: any) => o.permitSubClass === 'Single Family/Duplex' && o.completedDate !== null)
-    {
-        const items = allItems.filter((o: any) =>
-            o.permitClass === 'Residential' &&
-            o.permitType === 'Building' &&
-            o.permitSubType === 'New' &&
-            o.completedDate !== null)
-        createChart(items, 'Residential New Construction')
-    }
-}
+//     {
+//         const items = allItems.filter((o: any) =>
+//             o.permitClass === 'Residential' &&
+//             o.permitType === 'Building' &&
+//             o.permitSubType === 'New' &&
+//             o.completedDate !== null)
+//         createChart(items, 'Residential New Construction')
+//     }
+// }
 
 function createChart(items: any[], title: string) {
     console.log(`${title}: ${items.length} items`)
@@ -107,10 +151,9 @@ function createChart(items: any[], title: string) {
     //     console.log(`${new Date(key).toDateString()}: ${count}`)
     // }
 
-    const canvas = document.createElement('canvas')
+    const canvas = document.getElementById('mainCanvas') as HTMLCanvasElement
     canvas.style.maxWidth = '800px'
     canvas.style.maxHeight = '500px'
-    document.body.appendChild(canvas)
     const ctx = canvas.getContext('2d')!
 
     const chartData: Chart.ChartData = {

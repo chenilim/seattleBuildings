@@ -6,10 +6,14 @@ let allItems: any[] = []
 let chart: Chart
 
 async function loadData(): Promise<void> {
+	console.log(`LoadData...`)
+
     const url = './rows.json'
     const response = await fetch(url)
+	console.log(`Loading JSON...`)
     rows = await response.json()
 
+	console.log(`Parsing JSON...`)
     allItems = rows.data.map((r: any) => ({
         permitSubClass: r[9],
         permitClass: r[10],
@@ -50,17 +54,17 @@ function createControls() {
 async function main() {
     await loadData()
 
-    console.log('Permit classes:')
-    const permitClasses = group(allItems, o => o.permitClass + '-' + o.permitSubClass)
-    for (const key of permitClasses.keys()) {
-        console.log(`${key}: ${permitClasses.get(key)}`)
-    }
+    // console.log('Permit classes:')
+    // const permitClasses = group(allItems, o => o.permitClass + '-' + o.permitSubClass)
+    // for (const key of permitClasses.keys()) {
+    //     console.log(`${key}: ${permitClasses.get(key)}`)
+    // }
 
-    console.log('Permit types:')
-    const permitTypes = group(allItems, o => o.permitType + '-' + o.permitSubType)
-    for (const key of permitTypes.keys()) {
-        console.log(`${key}: ${permitTypes.get(key)}`)
-	}
+    // console.log('Permit types:')
+    // const permitTypes = group(allItems, o => o.permitType + '-' + o.permitSubType)
+    // for (const key of permitTypes.keys()) {
+    //     console.log(`${key}: ${permitTypes.get(key)}`)
+	// }
 
 	createControls()
 	drawChart('residential', 'new')

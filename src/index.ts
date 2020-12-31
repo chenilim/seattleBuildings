@@ -200,6 +200,21 @@ function createChart(items: any[], title: string) {
 function showGroup(group: any[]) {
 	console.log(`showGroup ${group.length}`)
 	console.log(group)
+
+	clearLog()
+	for (const item of group) {
+		log(JSON.stringify(item) + '\n')
+	}
+}
+
+function clearLog() {
+	const panel = document.getElementById('sidebar') as HTMLDivElement
+	panel.innerText = ''
+}
+
+function log(msg: string) {
+	const panel = document.getElementById('sidebar') as HTMLDivElement
+	panel.innerText = panel.innerText + msg + '\n'
 }
 
 main()

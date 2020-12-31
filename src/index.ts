@@ -1,3 +1,4 @@
+import './main.css'
 import * as Chart from 'chart.js'
 
 let rows: any = []

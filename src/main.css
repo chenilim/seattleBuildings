@@ -6,13 +6,18 @@ html, body {
 .frame {
 	display: flex;
 	flex-direction: column;
+	margin: 20px;
 }
 
 .frame > * {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
+}
+
+#header > *{
+	margin-left: 10px;
 }
 
 #main {
-	flex-direction: row;
+
 }

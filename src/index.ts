@@ -67,11 +67,11 @@ function createControls() {
 		drawChart(selectClass.value, selectNew.value)
 	}
 
-	const downloadLink = document.createElement('a') as HTMLAnchorElement
-	downloadLink.href = '#'
-	downloadLink.innerText = 'Download data'
-	downloadLink.onclick = () => { downloadData() }
-	panel.appendChild(downloadLink)
+	// const downloadLink = document.createElement('a') as HTMLAnchorElement
+	// downloadLink.href = '#'
+	// downloadLink.innerText = 'Download data'
+	// downloadLink.onclick = () => { downloadData() }
+	// panel.appendChild(downloadLink)
 }
 
 function downloadData() {

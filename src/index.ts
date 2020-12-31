@@ -13,30 +13,32 @@ async function loadData(): Promise<void> {
 	console.log(`Loading JSON...`)
     rows = await response.json()
 
-	console.log(`Parsing JSON...`)
-    allItems = rows.data.map((r: any) => {
-		let link = ''
-		const info = r[28]
-		if (info?.length > 0) {
-			link = info[0]
-		}
-		return {
-			id: r[8],
-			permitSubClass: r[9],
-			permitClass: r[10],
-			permitType: r[11],
-			permitSubType: r[12],
-			description: r[13],
-			completed: r[21],
-			completedDate: r[21] && new Date(r[21]),
-			status: r[22],
-			address: r[23],
-			city: r[24],
-			state: r[25],
-			zip: r[26],
-			link,
-		}
-	})
+	allItems = rows
+
+	// console.log(`Parsing JSON...`)
+    // allItems = rows.data.map((r: any) => {
+	// 	let link = ''
+	// 	const info = r[28]
+	// 	if (info?.length > 0) {
+	// 		link = info[0]
+	// 	}
+	// 	return {
+	// 		id: r[8],
+	// 		permitSubClass: r[9],
+	// 		permitClass: r[10],
+	// 		permitType: r[11],
+	// 		permitSubType: r[12],
+	// 		description: r[13],
+	// 		completed: r[21],
+	// 		completedDate: r[21] && new Date(r[21]).getTime(),
+	// 		status: r[22],
+	// 		address: r[23],
+	// 		city: r[24],
+	// 		state: r[25],
+	// 		zip: r[26],
+	// 		link,
+	// 	}
+	// })
 
     console.log(`Loaded ${allItems.length} rows.`)
 }
@@ -53,6 +55,8 @@ function group(items: any[], mapper: (_: any) => any) {
 }
 
 function createControls() {
+	const panel = document.getElementById('header') as HTMLDivElement
+
 	const selectClass = document.getElementById('selectType') as HTMLSelectElement
 	selectClass.onchange = (e) => {
 		drawChart(selectClass.value, selectNew.value)
@@ -62,6 +66,29 @@ function createControls() {
 	selectNew.onchange = (e) => {
 		drawChart(selectClass.value, selectNew.value)
 	}
+
+	const downloadLink = document.createElement('a') as HTMLAnchorElement
+	downloadLink.href = '#'
+	downloadLink.innerText = 'Download data'
+	downloadLink.onclick = () => { downloadData() }
+	panel.appendChild(downloadLink)
+}
+
+function downloadData() {
+	const content = JSON.stringify(allItems)
+
+	const date = new Date()
+	const filename = `seattleBuildings.json`
+	const link = document.createElement('a')
+	link.style.display = 'none'
+
+	// const file = new Blob([content], { type: "text/json" })
+	// link.href = URL.createObjectURL(file)
+	link.href = 'data:text/json,' + encodeURIComponent(content)
+	link.download = filename
+	document.body.appendChild(link)						// FireFox support
+
+	link.click()
 }
 
 async function main() {
@@ -84,7 +111,7 @@ async function main() {
 }
 
 function drawChart(permitClass: string, isNew: string) {
-	let items = allItems.filter((o: any) => o.status === 'Completed' && o.completedDate !== null)
+	let items = allItems.filter((o: any) => o.status === 'Completed' && o.completedDate)
 
 	switch (permitClass) {
 		case 'residential': {
@@ -115,7 +142,7 @@ function drawChart(permitClass: string, isNew: string) {
 function createChart(items: any[], title: string) {
     console.log(`${title}: ${items.length} items`)
 
-    // const dates = items.map((o: any) => o.completedDate)
+    // const dates = items.map((o: any) => new Date(o.completedDate))
     //     .filter(o => o)
 
     // const minDate = dates.reduce(function (a, b) { return a < b ? a : b })
@@ -126,7 +153,8 @@ function createChart(items: any[], title: string) {
 
     let groups = new Map<number, any[]>()
     for (const item of items) {
-        const key = new Date(item.completedDate.getFullYear(), item.completedDate.getMonth()).getTime()
+		const completedDate = new Date(item.completedDate)
+        const key = new Date(completedDate.getFullYear(), completedDate.getMonth()).getTime()
         const group = groups.get(key)
         if (group) {
 			group.push(item)

@@ -90,18 +90,18 @@ function createChart(items: any[], title: string) {
     // console.log(`minDate: ${minDate}`)
     // console.log(`maxDate: ${maxDate}`)
 
-    let grouped = new Map()
+    let groups = new Map<number, any[]>()
     for (const item of items) {
         const key = new Date(item.completedDate.getFullYear(), item.completedDate.getMonth()).getTime()
-        const count = grouped.get(key)
-        if (count) {
-            grouped.set(key, count + 1)
+        const group = groups.get(key)
+        if (group) {
+			group.push(item)
         } else {
-            grouped.set(key, 1)
+			groups.set(key, [item])
         }
     }
 
-    const keys = [...grouped.keys()].sort((a, b) => a - b)
+    const keys = [...groups.keys()].sort((a, b) => a - b)
     // for (const key of keys) {
     //     const count = grouped.get(key)
     //     console.log(`${new Date(key).toDateString()}: ${count}`)
@@ -119,9 +119,24 @@ function createChart(items: any[], title: string) {
             backgroundColor: Chart.helpers.color('#505090').alpha(0.5).rgbString(),
             borderColor: '#505090',
             borderWidth: 1,
-            data: keys.map(o => grouped.get(o))
+			barPercentage: 1.0,
+			categoryPercentage: 1.0,
+            data: keys.map(o => groups.get(o)!.length)
         }]
     }
+
+	const onClick = (event?: MouseEvent, activeElements?: any[]) => {
+		console.log(`onClick ${activeElements?.length}`)
+		if (activeElements && activeElements.length > 0) {
+			const chartElement = activeElements[0]
+			const index: number = Number(chartElement._index)
+			const key = keys[index]
+			const group = groups.get(key)
+			if (group) {
+				showGroup(group)
+			}
+		}
+	}
 
     const config: Chart.ChartConfiguration = {
         type: 'bar',
@@ -130,7 +145,7 @@ function createChart(items: any[], title: string) {
             responsive: true,
             scales: {
                 xAxes: [{
-                    stacked: true,
+					stacked: true,
                 }],
                 yAxes: [{
                     stacked: true
@@ -143,11 +158,17 @@ function createChart(items: any[], title: string) {
             title: {
                 display: true,
                 text: title
-            }
+			},
+			onClick: onClick
         }
     }
 
-    var myChart = new Chart(ctx, config)
+    let myChart = new Chart(ctx, config)
+}
+
+function showGroup(group: any[]) {
+	console.log(`showGroup ${group.length}`)
+	console.log(group)
 }
 
 main()

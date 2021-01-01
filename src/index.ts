@@ -67,12 +67,15 @@ function createControls() {
 	const panel = document.getElementById('header') as HTMLDivElement
 
 	const refresh = () => {
-		drawChart(selectClass.value, selectNew.value, selectStatus.value)
+		drawChart(selectClass.value, selectType.value, selectStatus.value)
 	}
 
 	const selectClass = addSelector(group(allItems, o => o.permitClass), refresh)
-	const selectNew = addSelector(group(allItems, o => o.permitSubType), refresh)
+	const selectType = addSelector(group(allItems, o => o.permitSubType), refresh)
 	const selectStatus = addSelector(group(allItems, o => o.status), refresh)
+
+	selectClass.value = 'Residential'
+	selectType.value = 'New'
 
 	// Download data
 	// const downloadLink = document.createElement('a') as HTMLAnchorElement
@@ -123,7 +126,7 @@ async function main() {
 	loadingLabel.remove()
 
 	createControls()
-	drawChart('residential', 'new')
+	drawChart('Residential', 'New')
 }
 
 function drawChart(permitClass?: string, subType?: string, status?: string) {

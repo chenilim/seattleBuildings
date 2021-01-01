@@ -1,31 +1,40 @@
 import { Row } from "./types"
 
 class MapRenderer {
-	constructor(private canvas: HTMLCanvasElement) {
+	private minLong: number
+	private longSpan: number
+	private minLat: number
+	private latSpan: number
+	private data: any[]
+
+	constructor(
+		public canvas: HTMLCanvasElement,
+		public items: Row[]
+	) {
 		canvas.width = 1600
 		canvas.height = 1000
 		canvas.style.width = '800px'
 		canvas.style.height = '500px'
-	}
 
-	renderMap(items: Row[]) {
-		const { canvas } = this
-		const ctx = canvas.getContext('2d')!
-
-		const data = items.map(o => ({
+		this.data = items.map(o => ({
 			lat: Number(o.lat),
 			long: Number(o.long)
 		})).filter(o => o.lat && o.long)
 
-		const longs = data.map(o => o.long)
-		const minLong = longs.reduce(function (a, b) { return a < b ? a : b })
+		const longs = this.data.map(o => o.long)
+		this.minLong = longs.reduce(function (a, b) { return a < b ? a : b })
 		const maxLong = longs.reduce(function (a, b) { return a > b ? a : b })
-		const longSpan = maxLong - minLong
+		this.longSpan = maxLong - this.minLong
 
-		const lats = data.map(o => o.lat)
-		const minLat = lats.reduce(function (a, b) { return a < b ? a : b })
+		const lats = this.data.map(o => o.lat)
+		this.minLat = lats.reduce(function (a, b) { return a < b ? a : b })
 		const maxLat = lats.reduce(function (a, b) { return a > b ? a : b })
-		const latSpan = maxLat - minLat
+		this.latSpan = maxLat - this.minLat
+	}
+
+	draw() {
+		const { canvas, data, minLong, longSpan, minLat, latSpan } = this
+		const ctx = canvas.getContext('2d')!
 
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
 

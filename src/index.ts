@@ -291,8 +291,8 @@ function log(msg: string) {
 
 function renderMap(items: Row[]) {
 	const canvas = document.getElementById('mapCanvas') as HTMLCanvasElement
-	const renderer = new MapRenderer(canvas)
-	renderer.renderMap(items)
+	const renderer = new MapRenderer(canvas, items)
+	renderer.draw()
 
 	canvas.style.display = ''
 }

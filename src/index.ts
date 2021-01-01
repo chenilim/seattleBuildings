@@ -97,6 +97,7 @@ function createControls() {
 
 	selectClass.value = 'Residential'
 	selectType.value = 'New'
+	selectStatus.value = 'Completed'
 
 	// Download data
 	// const downloadLink = document.createElement('a') as HTMLAnchorElement
@@ -147,7 +148,7 @@ async function main() {
 	loadingLabel.remove()
 
 	createControls()
-	drawChart('Residential', 'New')
+	drawChart('Residential', 'New', 'Completed')
 }
 
 function drawChart(permitClass?: string, subType?: string, status?: string) {

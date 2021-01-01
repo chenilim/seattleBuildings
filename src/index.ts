@@ -345,6 +345,8 @@ function renderMap(items: Row[]) {
 		ctx.arc(x, y, size, 0, 2 * Math.PI)
 		ctx.fill()
 	})
+
+	canvas.style.display = ''
 }
 
 main()

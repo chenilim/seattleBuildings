@@ -21,8 +21,9 @@ html, body {
 	margin-left: 10px;
 }
 
-#right {
+#log {
 	font-size: 12px;
+	padding: 10px;
 }
 
 #left {
@@ -32,4 +33,9 @@ html, body {
 #mapCanvas {
 	margin-top: 20px;
 	border: solid 1px #cccccc;
+}
+
+select {
+	padding: 5px 10px;
+	min-height: 30px;
 }

@@ -1,47 +1,116 @@
 {
-	"extends": "airbnb",
+	"parser": "@typescript-eslint/parser",
+	"plugins": [
+		"@typescript-eslint",
+		"eslint-plugin-import"
+	],
 	"env": {
-	"node": true,
-	"es6": true,
-	"browser": true
+		"node": true,
+		"es6": true,
+		"browser": true
+	},
+	"settings": {
+		"import/resolver": "webpack"
 	},
 	"rules": {
-        "indent": [2, "tab",  {"SwitchCase": 1}],
 		"no-tabs": 0,
-		"comma-dangle": 0,
-		"max-len": ["warn", { "code": 140 }],
-		"operator-linebreak": [2, "after"],
-		"prefer-destructuring": ["warn", {
-			"array": false,
-			"object": true
-		}, {
-			"enforceForRenamedProperties": false
-		}],
-		"no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
-		"func-names": [2, "as-needed"],
-
-		"import/prefer-default-export": 0,
-		"import/extensions": [2, "ignorePackages"],
-		"import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
-
-		"no-unexpected-multiline": 1,
-		"no-lonely-if": 0,
-		"no-nested-ternary": 0,
-		"class-methods-use-this": 1,
-		"lines-between-class-members": ["warn", { "exceptAfterSingleLine": true }],
-		"no-restricted-syntax": ["error", "ForInStatement", "LabeledStatement", "WithStatement"],
-		"no-console": 0,
-		"no-alert": 2,
-		"object-shorthand": ["error", "properties"],
-		"no-bitwise": ["error", { "int32Hint": true }],
-		"no-param-reassign": [2, { "props": false }],
-		"quotes": [2, "double",  { "allowTemplateLiterals": true }],
-		"brace-style": ["warn", "1tbs", { "allowSingleLine": true }],
-		"object-curly-newline": ["error", {
-			"ObjectExpression": { "consistent": true },
-			"ObjectPattern": { "multiline": true },
-			"ImportDeclaration": "never",
-			"ExportDeclaration": { "multiline": true, "minProperties": 3 }
-		}]
+		"no-unused-expressions": 1,
+		"eol-last": [
+			"error",
+			"always"
+		],
+		"import/no-unresolved": 2,
+		"import/extensions": [
+			"error",
+			"never"
+		],
+		"import/order": [
+			2,
+			{
+				"newlines-between": "always-and-inside-groups",
+				"groups": [
+					"builtin",
+					"external",
+					[
+						"internal",
+						"parent"
+					],
+					"sibling",
+					"index"
+				]
+			}
+		],
+		"no-undefined": 0,
+		"max-nested-callbacks": [
+			"error",
+			{
+				"max": 5
+			}
+		],
+		"camelcase": 0,
+		"semi": "off",
+		"@typescript-eslint/naming-convention": [
+			2,
+			{
+				"selector": "function",
+				"format": [
+					"camelCase",
+					"PascalCase"
+				]
+			},
+			{
+				"selector": "variable",
+				"format": [
+					"camelCase",
+					"PascalCase",
+					"UPPER_CASE"
+				]
+			},
+			{
+				"selector": "parameter",
+				"format": [
+					"camelCase",
+					"PascalCase"
+				],
+				"leadingUnderscore": "allow"
+			},
+			{
+				"selector": "typeLike",
+				"format": [
+					"PascalCase"
+				]
+			}
+		],
+		"@typescript-eslint/no-non-null-assertion": 0,
+		"no-unused-vars": [
+			1,
+			{
+				"vars": "all",
+				"args": "after-used"
+			}
+		],
+		"@typescript-eslint/no-var-requires": 0,
+		"@typescript-eslint/no-empty-function": 0,
+		"@typescript-eslint/prefer-interface": 0,
+		"@typescript-eslint/explicit-function-return-type": 0,
+		"@typescript-eslint/semi": [
+			2,
+			"never"
+		],
+		"indent": [
+			"error",
+			"tab"
+		],
+		"no-use-before-define": "off",
+		"@typescript-eslint/no-use-before-define": [
+			2,
+			{
+				"classes": false,
+				"functions": false,
+				"variables": false
+			}
+		],
+		"no-useless-constructor": 0,
+		"@typescript-eslint/no-useless-constructor": 2
 	}
 }

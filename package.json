@@ -18,8 +18,13 @@
 	},
 	"devDependencies": {
 		"@types/chart.js": "^2.9.29",
+		"@typescript-eslint/eslint-plugin": "^4.11.1",
+		"@typescript-eslint/parser": "^4.11.1",
 		"copy-webpack-plugin": "^7.0.0",
 		"css-loader": "^5.0.1",
+		"eslint": "^7.2.0",
+		"eslint-import-resolver-webpack": "^0.13.0",
+		"eslint-plugin-import": "^2.22.1",
 		"html-webpack-plugin": "^4.5.0",
 		"style-loader": "^2.0.0",
 		"ts-loader": "^8.0.12",

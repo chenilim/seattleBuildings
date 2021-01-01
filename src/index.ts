@@ -1,19 +1,19 @@
 import './main.css'
 import * as Chart from 'chart.js'
+
 import { Row } from './types'
 import { MapRenderer } from './mapRenderer'
 
 let allItems: Row[] = []
 let chart: Chart
 
-
 async function loadData(): Promise<void> {
-	console.log(`LoadData...`)
+	console.log('LoadData...')
 
 	const url = './rows.json'
 	// const url = './allrows.json'
 	const response = await fetch(url)
-	console.log(`Loading JSON...`)
+	console.log('Loading JSON...')
 	const rows = await response.json()
 
 	allItems = rows
@@ -50,7 +50,7 @@ async function loadData(): Promise<void> {
 }
 
 function group(items: any[], mapper: (_: any) => any) {
-	let counts = new Map()
+	const counts = new Map()
 	for (const item of items) {
 		const key = mapper(item)
 		const count = counts.get(key)
@@ -68,15 +68,13 @@ function createSelectOption(value: string, displayName: string) {
 }
 
 function createControls() {
-	const panel = document.getElementById('header') as HTMLDivElement
-
 	const refresh = () => {
 		drawChart(selectClass.value, selectType.value, selectStatus.value)
 	}
 
-	const selectClass = addSelector(group(allItems, o => o.permitClass), refresh)
-	const selectType = addSelector(group(allItems, o => o.permitSubType), refresh)
-	const selectStatus = addSelector(group(allItems, o => o.status), refresh)
+	const selectClass = addSelector(group(allItems, (o) => o.permitClass), refresh)
+	const selectType = addSelector(group(allItems, (o) => o.permitSubType), refresh)
+	const selectStatus = addSelector(group(allItems, (o) => o.status), refresh)
 
 	selectClass.value = 'Residential'
 	selectType.value = 'New'
@@ -108,13 +106,13 @@ function downloadData() {
 	const content = JSON.stringify(allItems)
 
 	const date = new Date()
-	const filename = `seattleBuildings.json`
+	const filename = 'seattleBuildings.json'
 	const link = document.createElement('a')
 	link.style.display = 'none'
 
 	// const file = new Blob([content], { type: "text/json" })
 	// link.href = URL.createObjectURL(file)
-	link.href = 'data:text/json,' + encodeURIComponent(content)
+	link.href = `data:text/json,${encodeURIComponent(content)}`
 	link.download = filename
 	document.body.appendChild(link)						// FireFox support
 
@@ -139,16 +137,16 @@ function drawChart(permitClass?: string, subType?: string, status?: string) {
 	let items = allItems
 
 	if (permitClass) {
-		items = items.filter(o => o.permitClass === permitClass)
+		items = items.filter((o) => o.permitClass === permitClass)
 	}
 
 	if (subType) {
-		items = items.filter(o => o.permitSubType === subType)
+		items = items.filter((o) => o.permitSubType === subType)
 	}
 
 	let dateKey: 'completed' | 'issued' = 'completed'
 	if (status) {
-		items = items.filter(o => o.status === status)
+		items = items.filter((o) => o.status === status)
 		if (status !== 'Completed') {
 			dateKey = 'issued'
 		}
@@ -171,7 +169,7 @@ function createChart(items: Row[], title: string, dateKey: 'completed' | 'issued
 	// console.log(`minDate: ${minDate}`)
 	// console.log(`maxDate: ${maxDate}`)
 
-	let groups = new Map<number, any[]>()
+	const groups = new Map<number, any[]>()
 	for (const item of items) {
 		const dateString = item[dateKey]
 		if (dateString) {
@@ -198,15 +196,15 @@ function createChart(items: Row[], title: string, dateKey: 'completed' | 'issued
 	const ctx = canvas.getContext('2d')!
 
 	const chartData: Chart.ChartData = {
-		labels: keys.map(o => new Date(o).toDateString()),
+		labels: keys.map((o) => new Date(o).toDateString()),
 		datasets: [{
 			backgroundColor: '#505090',
 			// borderColor: '#505090',
 			borderWidth: 1,
 			barPercentage: 1.0,
 			categoryPercentage: 1.0,
-			data: keys.map(o => groups.get(o)!.length)
-		}]
+			data: keys.map((o) => groups.get(o)!.length),
+		}],
 	}
 
 	const onClick = (event?: MouseEvent, activeElements?: any[]) => {
@@ -230,15 +228,15 @@ function createChart(items: Row[], title: string, dateKey: 'completed' | 'issued
 		options: {
 			responsive: true,
 			animation: {
-				duration: 0 // general animation time
+				duration: 0, // general animation time
 			},
 			scales: {
 				xAxes: [{
 					stacked: true,
 				}],
 				yAxes: [{
-					stacked: true
-				}]
+					stacked: true,
+				}],
 			},
 			legend: {
 				position: 'top',
@@ -246,10 +244,10 @@ function createChart(items: Row[], title: string, dateKey: 'completed' | 'issued
 			},
 			title: {
 				display: true,
-				text: title
+				text: title,
 			},
-			onClick: onClick
-		}
+			onClick,
+		},
 	}
 
 	if (chart) {
@@ -275,7 +273,7 @@ function showGroup(group: any[], title: string) {
 	clearLog()
 	log(`${title}, ${group.length} items:\n`)
 	for (const item of group) {
-		log(JSON.stringify(item) + ',\n')
+		log(`${JSON.stringify(item)},\n`)
 	}
 }
 
@@ -286,7 +284,7 @@ function clearLog() {
 
 function log(msg: string) {
 	const panel = document.getElementById('log') as HTMLDivElement
-	panel.innerText = panel.innerText + msg + '\n'
+	panel.innerText = `${panel.innerText + msg}\n`
 }
 
 function renderMap(items: Row[]) {

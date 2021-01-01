@@ -9,6 +9,7 @@ async function loadData(): Promise<void> {
 	console.log(`LoadData...`)
 
 	const url = './rows.json'
+	// const url = './allrows.json'
 	const response = await fetch(url)
 	console.log(`Loading JSON...`)
 	rows = await response.json()
@@ -29,8 +30,9 @@ async function loadData(): Promise<void> {
 	// 		permitType: r[11],
 	// 		permitSubType: r[12],
 	// 		description: r[13],
+	// 		issued: r[19],
+	// 		expires: r[20],
 	// 		completed: r[21],
-	// 		completedDate: r[21] && new Date(r[21]).getTime(),
 	// 		status: r[22],
 	// 		address: r[23],
 	// 		city: r[24],
@@ -54,11 +56,18 @@ function group(items: any[], mapper: (_: any) => any) {
 	return counts
 }
 
+function createSelectOption(value: string, displayName: string) {
+	const element = document.createElement('option')
+	element.value = value
+	element.innerText = displayName
+	return element
+}
+
 function createControls() {
 	const panel = document.getElementById('header') as HTMLDivElement
 
 	const refresh = () => {
-		drawChart(selectClass.value, selectNew.value)
+		drawChart(selectClass.value, selectNew.value, selectStatus.value)
 	}
 
 	const selectClass = document.getElementById('selectType') as HTMLSelectElement
@@ -67,6 +76,17 @@ function createControls() {
 	const selectNew = document.getElementById('selectNew') as HTMLSelectElement
 	selectNew.onchange = refresh
 
+	const statusList = group(allItems, o => o.status)
+
+	const selectStatus = panel.appendChild(document.createElement('select'))
+	selectStatus.appendChild(createSelectOption('', 'All'))
+	const entries = [...statusList.entries()].sort((a, b) => b[1] - a[1])
+	for (const entry of entries) {
+		selectStatus.appendChild(createSelectOption(entry[0], `${entry[0]} (${entry[1]})`))
+	}
+	selectStatus.onchange = refresh
+
+	// Download data
 	// const downloadLink = document.createElement('a') as HTMLAnchorElement
 	// downloadLink.href = '#'
 	// downloadLink.innerText = 'Download data'
@@ -116,8 +136,9 @@ async function main() {
 	drawChart('residential', 'new')
 }
 
-function drawChart(permitClass: string, isNew: string) {
-	let items = allItems.filter((o: any) => o.status === 'Completed' && o.completedDate)
+function drawChart(permitClass: string, isNew: string, status?: string) {
+	// let items = allItems.filter((o: any) => o.status === 'Completed' && o.completed)
+	let items = allItems
 
 	switch (permitClass) {
 		case 'residential': {
@@ -141,14 +162,22 @@ function drawChart(permitClass: string, isNew: string) {
 		}
 	}
 
+	let dateKey = 'completed'
+	if (status) {
+		items = items.filter(o => o.status === status)
+		if (status !== 'Completed') {
+			dateKey = 'issued'
+		}
+	}
+
 	const title = `${isNew.charAt(0).toUpperCase() + isNew.slice(1)} ${permitClass}`
-	createChart(items, title)
+	createChart(items, title, dateKey)
 }
 
-function createChart(items: any[], title: string) {
+function createChart(items: any[], title: string, dateKey = 'completed') {
 	console.log(`${title}: ${items.length} items`)
 
-	// const dates = items.map((o: any) => new Date(o.completedDate))
+	// const dates = items.map((o: any) => new Date(o.completed))
 	//     .filter(o => o)
 
 	// const minDate = dates.reduce(function (a, b) { return a < b ? a : b })
@@ -159,13 +188,16 @@ function createChart(items: any[], title: string) {
 
 	let groups = new Map<number, any[]>()
 	for (const item of items) {
-		const completedDate = new Date(item.completedDate)
-		const key = new Date(completedDate.getFullYear(), completedDate.getMonth()).getTime()
-		const group = groups.get(key)
-		if (group) {
-			group.push(item)
-		} else {
-			groups.set(key, [item])
+		const dateString = item[dateKey]
+		if (dateString) {
+			const date = new Date(item[dateKey])
+			const key = new Date(date.getFullYear(), date.getMonth()).getTime()
+			const group = groups.get(key)
+			if (group) {
+				group.push(item)
+			} else {
+				groups.set(key, [item])
+			}
 		}
 	}
 

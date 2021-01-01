@@ -13,3 +13,7 @@ Tips and tricks:
 -   Remember to switch back to main, and don't touch the gh-pages branch after that
 -   The workflow will build then commit the contents of dist to the /docs folder on the gh-pages branch
 -   Note that the docs folder doesn't appear in main
+
+Notes:
+
+-   [Data source](https://catalog.data.gov/dataset/building-permits-78a29)

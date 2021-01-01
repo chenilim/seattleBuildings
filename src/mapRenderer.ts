@@ -52,6 +52,16 @@ class MapRenderer {
 				return
 			}
 
+			if (!e.buttons) {
+				// Mouse button was released
+				this.isMouseDown = false
+				if (this.overlay) {
+					this.overlay.remove()
+					this.overlay = undefined
+				}
+				return
+			}
+
 			let rect = (e.target as HTMLElement).getBoundingClientRect()
 			let x = e.clientX - rect.left
 			let y = e.clientY - rect.top
@@ -83,6 +93,7 @@ class MapRenderer {
 			}
 
 			this.draw()
+
 			this.isMouseDown = false
 			if (this.overlay) {
 				this.overlay.remove()
@@ -97,6 +108,7 @@ class MapRenderer {
 			this.overlay.style.position = 'absolute'
 			this.overlay.style.backgroundColor = 'rgba(0, 128, 192, 0.2)'
 			this.overlay.style.zIndex = '10'
+			this.overlay.style.pointerEvents = 'none'
 			this.canvas.parentElement!.appendChild(this.overlay)
 		}
 

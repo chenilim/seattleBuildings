@@ -22,3 +22,4 @@ jobs:
                   FOLDER: dist # The source folder the action should deploy.
                   TARGET_FOLDER: docs
                   CLEAN: true # Automatically remove deleted files from the deploy branch
+                  PRESERE: true

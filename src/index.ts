@@ -8,15 +8,15 @@ let chart: Chart
 async function loadData(): Promise<void> {
 	console.log(`LoadData...`)
 
-    const url = './rows.json'
-    const response = await fetch(url)
+	const url = './rows.json'
+	const response = await fetch(url)
 	console.log(`Loading JSON...`)
-    rows = await response.json()
+	rows = await response.json()
 
 	allItems = rows
 
 	// console.log(`Parsing JSON...`)
-    // allItems = rows.data.map((r: any) => {
+	// allItems = rows.data.map((r: any) => {
 	// 	let link = ''
 	// 	const info = r[28]
 	// 	if (info?.length > 0) {
@@ -40,18 +40,18 @@ async function loadData(): Promise<void> {
 	// 	}
 	// })
 
-    console.log(`Loaded ${allItems.length} rows.`)
+	console.log(`Loaded ${allItems.length} rows.`)
 }
 
 function group(items: any[], mapper: (_: any) => any) {
-    let counts = new Map()
-    for (const item of items) {
-        const key = mapper(item)
-        const count = counts.get(key)
-        counts.set(key, count ? count + 1 : 1)
-    }
+	let counts = new Map()
+	for (const item of items) {
+		const key = mapper(item)
+		const count = counts.get(key)
+		counts.set(key, count ? count + 1 : 1)
+	}
 
-    return counts
+	return counts
 }
 
 function createControls() {
@@ -92,18 +92,24 @@ function downloadData() {
 }
 
 async function main() {
-    await loadData()
+	const mainPanel = document.getElementById('main')!
+	const loadingLabel = mainPanel.appendChild(document.createElement('div'))
+	loadingLabel.innerText = 'Loading...'
 
-    // console.log('Permit classes:')
-    // const permitClasses = group(allItems, o => o.permitClass + '-' + o.permitSubClass)
-    // for (const key of permitClasses.keys()) {
-    //     console.log(`${key}: ${permitClasses.get(key)}`)
-    // }
+	await loadData()
 
-    // console.log('Permit types:')
-    // const permitTypes = group(allItems, o => o.permitType + '-' + o.permitSubType)
-    // for (const key of permitTypes.keys()) {
-    //     console.log(`${key}: ${permitTypes.get(key)}`)
+	loadingLabel.remove()
+
+	// console.log('Permit classes:')
+	// const permitClasses = group(allItems, o => o.permitClass + '-' + o.permitSubClass)
+	// for (const key of permitClasses.keys()) {
+	//     console.log(`${key}: ${permitClasses.get(key)}`)
+	// }
+
+	// console.log('Permit types:')
+	// const permitTypes = group(allItems, o => o.permitType + '-' + o.permitSubType)
+	// for (const key of permitTypes.keys()) {
+	//     console.log(`${key}: ${permitTypes.get(key)}`)
 	// }
 
 	createControls()
@@ -140,51 +146,51 @@ function drawChart(permitClass: string, isNew: string) {
 }
 
 function createChart(items: any[], title: string) {
-    console.log(`${title}: ${items.length} items`)
+	console.log(`${title}: ${items.length} items`)
 
-    // const dates = items.map((o: any) => new Date(o.completedDate))
-    //     .filter(o => o)
+	// const dates = items.map((o: any) => new Date(o.completedDate))
+	//     .filter(o => o)
 
-    // const minDate = dates.reduce(function (a, b) { return a < b ? a : b })
-    // const maxDate = dates.reduce(function (a, b) { return a > b ? a : b })
+	// const minDate = dates.reduce(function (a, b) { return a < b ? a : b })
+	// const maxDate = dates.reduce(function (a, b) { return a > b ? a : b })
 
-    // console.log(`minDate: ${minDate}`)
-    // console.log(`maxDate: ${maxDate}`)
+	// console.log(`minDate: ${minDate}`)
+	// console.log(`maxDate: ${maxDate}`)
 
-    let groups = new Map<number, any[]>()
-    for (const item of items) {
+	let groups = new Map<number, any[]>()
+	for (const item of items) {
 		const completedDate = new Date(item.completedDate)
-        const key = new Date(completedDate.getFullYear(), completedDate.getMonth()).getTime()
-        const group = groups.get(key)
-        if (group) {
+		const key = new Date(completedDate.getFullYear(), completedDate.getMonth()).getTime()
+		const group = groups.get(key)
+		if (group) {
 			group.push(item)
-        } else {
+		} else {
 			groups.set(key, [item])
-        }
-    }
+		}
+	}
 
-    const keys = [...groups.keys()].sort((a, b) => a - b)
-    // for (const key of keys) {
-    //     const count = grouped.get(key)
-    //     console.log(`${new Date(key).toDateString()}: ${count}`)
-    // }
+	const keys = [...groups.keys()].sort((a, b) => a - b)
+	// for (const key of keys) {
+	//     const count = grouped.get(key)
+	//     console.log(`${new Date(key).toDateString()}: ${count}`)
+	// }
 
-    const canvas = document.getElementById('mainCanvas') as HTMLCanvasElement
-    canvas.style.maxWidth = '800px'
-    canvas.style.maxHeight = '500px'
-    const ctx = canvas.getContext('2d')!
+	const canvas = document.getElementById('mainCanvas') as HTMLCanvasElement
+	canvas.style.maxWidth = '800px'
+	canvas.style.maxHeight = '500px'
+	const ctx = canvas.getContext('2d')!
 
-    const chartData: Chart.ChartData = {
-        labels: keys.map(o => new Date(o).toDateString()),
-        datasets: [{
-            backgroundColor: '#505090',
-            // borderColor: '#505090',
-            borderWidth: 1,
+	const chartData: Chart.ChartData = {
+		labels: keys.map(o => new Date(o).toDateString()),
+		datasets: [{
+			backgroundColor: '#505090',
+			// borderColor: '#505090',
+			borderWidth: 1,
 			barPercentage: 1.0,
 			categoryPercentage: 1.0,
-            data: keys.map(o => groups.get(o)!.length)
-        }]
-    }
+			data: keys.map(o => groups.get(o)!.length)
+		}]
+	}
 
 	const onClick = (event?: MouseEvent, activeElements?: any[]) => {
 		console.log(`onClick ${activeElements?.length}`)
@@ -201,33 +207,33 @@ function createChart(items: any[], title: string) {
 		}
 	}
 
-    const config: Chart.ChartConfiguration = {
-        type: 'bar',
-        data: chartData,
-        options: {
+	const config: Chart.ChartConfiguration = {
+		type: 'bar',
+		data: chartData,
+		options: {
 			responsive: true,
 			animation: {
 				duration: 0 // general animation time
 			},
-            scales: {
-                xAxes: [{
+			scales: {
+				xAxes: [{
 					stacked: true,
-                }],
-                yAxes: [{
-                    stacked: true
-                }]
-            },
-            legend: {
-                position: 'top',
-                display: false,
-            },
-            title: {
-                display: true,
-                text: title
+				}],
+				yAxes: [{
+					stacked: true
+				}]
+			},
+			legend: {
+				position: 'top',
+				display: false,
+			},
+			title: {
+				display: true,
+				text: title
 			},
 			onClick: onClick
-        }
-    }
+		}
+	}
 
 	if (chart) {
 		chart.destroy()

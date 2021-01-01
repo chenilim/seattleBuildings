@@ -14,6 +14,11 @@
 	},
 	"rules": {
 		"no-tabs": 0,
+		"no-multi-spaces": 1,
+		"block-spacing": [
+			1,
+			"always"
+		],
 		"no-unused-expressions": 1,
 		"eol-last": [
 			"error",

@@ -102,22 +102,21 @@ function addSelector(group: Map<any, any>, refresh: () => any) {
 	return selector
 }
 
-function downloadData() {
-	const content = JSON.stringify(allItems)
+// function downloadData() {
+// 	const content = JSON.stringify(allItems)
 
-	const date = new Date()
-	const filename = 'seattleBuildings.json'
-	const link = document.createElement('a')
-	link.style.display = 'none'
+// 	const filename = 'seattleBuildings.json'
+// 	const link = document.createElement('a')
+// 	link.style.display = 'none'
 
-	// const file = new Blob([content], { type: "text/json" })
-	// link.href = URL.createObjectURL(file)
-	link.href = `data:text/json,${encodeURIComponent(content)}`
-	link.download = filename
-	document.body.appendChild(link)						// FireFox support
+// 	// const file = new Blob([content], { type: "text/json" })
+// 	// link.href = URL.createObjectURL(file)
+// 	link.href = `data:text/json,${encodeURIComponent(content)}`
+// 	link.download = filename
+// 	document.body.appendChild(link)						// FireFox support
 
-	link.click()
-}
+// 	link.click()
+// }
 
 async function main() {
 	const mainPanel = document.getElementById('main')!

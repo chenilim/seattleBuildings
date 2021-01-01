@@ -1,11 +1,11 @@
-import { Row } from "./types"
+import { IPoint, IRect, Row } from "./types"
 
 class MapRenderer {
-	private minLong: number
-	private longSpan: number
-	private minLat: number
-	private latSpan: number
 	private data: any[]
+
+	private maxRect: IRect = { x: 0, y: 0, w: 0, h: 0 }
+	private viewRect: IRect = { x: 0, y: 0, w: 0, h: 0 }
+	private mouseDownPoint: IPoint = { x: 0, y: 0 }
 
 	constructor(
 		public canvas: HTMLCanvasElement,
@@ -22,30 +22,61 @@ class MapRenderer {
 		})).filter(o => o.lat && o.long)
 
 		const longs = this.data.map(o => o.long)
-		this.minLong = longs.reduce(function (a, b) { return a < b ? a : b })
+		const minLong = longs.reduce(function (a, b) { return a < b ? a : b })
 		const maxLong = longs.reduce(function (a, b) { return a > b ? a : b })
-		this.longSpan = maxLong - this.minLong
+		const longSpan = maxLong - minLong
 
 		const lats = this.data.map(o => o.lat)
-		this.minLat = lats.reduce(function (a, b) { return a < b ? a : b })
+		const minLat = lats.reduce(function (a, b) { return a < b ? a : b })
 		const maxLat = lats.reduce(function (a, b) { return a > b ? a : b })
-		this.latSpan = maxLat - this.minLat
+		const latSpan = maxLat - minLat
+
+		this.maxRect = { x: minLong, y: minLat, w: longSpan, h: latSpan }
+		this.viewRect = { ...this.maxRect }
+
+		canvas.onmousedown = (e: MouseEvent) => {
+			let rect = (e.target as HTMLElement).getBoundingClientRect()
+	      	let x = e.clientX - rect.left
+			let y = e.clientY - rect.top
+			this.mouseDownPoint = { x, y }
+		}
+
+		canvas.onmouseup = (e: MouseEvent) => {
+			let rect = (e.target as HTMLElement).getBoundingClientRect()
+	      	let x = e.clientX - rect.left
+			let y = e.clientY - rect.top
+			const p = { x, y }
+
+			if (p.x <= this.mouseDownPoint.x || p.y <= this.mouseDownPoint.y) {
+				// Zoom all
+				this.viewRect = { ...this.maxRect }
+			} else {
+				const left = this.viewRect.x + (this.mouseDownPoint.x / rect.width) * this.viewRect.w
+				const top = this.viewRect.y + (this.mouseDownPoint.y / rect.height) * this.viewRect.h
+				const right = this.viewRect.x + (p.x / rect.width) * this.viewRect.w
+				const bottom = this.viewRect.y + (p.y / rect.height) * this.viewRect.h
+
+				this.viewRect = { x: left, y: top, w: right-left, h: bottom-top }
+			}
+
+			this.draw()
+		}
 	}
 
 	draw() {
-		const { canvas, data, minLong, longSpan, minLat, latSpan } = this
+		const { canvas, data, viewRect } = this
+
 		const ctx = canvas.getContext('2d')!
 
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-		const padding = 10
-		const width = canvas.width - padding * 2
-		const height = canvas.height - padding * 2
+		const width = canvas.width
+		const height = canvas.height
 
 		ctx.fillStyle = "rgba(0, 128, 192, 0.35)"
 		data.forEach(o => {
-			const x = padding + (o.long - minLong) * width / longSpan
-			const y = padding + (o.lat - minLat) * height / latSpan
+			const x = (o.long - viewRect.x) * width / viewRect.w
+			const y = (o.lat - viewRect.y) * height / viewRect.h
 			const size = 3
 
 			ctx.beginPath()

@@ -18,4 +18,16 @@ type Row = {
 	link: string,
 }
 
-export type { Row }
+interface IPoint {
+	x: number,
+	y: number
+}
+
+interface IRect {
+	x: number,
+	y: number,
+	w: number,
+	h: number
+}
+
+export type { Row, IPoint, IRect }

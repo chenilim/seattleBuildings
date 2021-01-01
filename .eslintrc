@@ -15,6 +15,15 @@
 	"rules": {
 		"no-tabs": 0,
 		"no-multi-spaces": 1,
+		"key-spacing": 1,
+		"object-curly-spacing": [
+			"warn",
+			"always"
+		],
+		"array-bracket-spacing": [
+			"warn",
+			"never"
+		],
 		"block-spacing": [
 			1,
 			"always"

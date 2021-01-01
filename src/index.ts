@@ -297,12 +297,12 @@ function showGroup(group: any[], title: string) {
 }
 
 function clearLog() {
-	const panel = document.getElementById('sidebar') as HTMLDivElement
+	const panel = document.getElementById('right') as HTMLDivElement
 	panel.innerText = ''
 }
 
 function log(msg: string) {
-	const panel = document.getElementById('sidebar') as HTMLDivElement
+	const panel = document.getElementById('right') as HTMLDivElement
 	panel.innerText = panel.innerText + msg + '\n'
 }
 

@@ -292,7 +292,7 @@ function showGroup(group: any[], title: string) {
 	clearLog()
 	log(`${title}, ${group.length} items:\n`)
 	for (const item of group) {
-		log(JSON.stringify(item) + '\n')
+		log(JSON.stringify(item) + ',\n')
 	}
 }
 

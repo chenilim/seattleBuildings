@@ -15,11 +15,6 @@ class MapRenderer {
 		public canvas: HTMLCanvasElement,
 		public items: Row[]
 	) {
-		canvas.width = 1600
-		canvas.height = 1000
-		canvas.style.width = '800px'
-		canvas.style.height = '500px'
-
 		this.data = items.map(o => ({
 			lat: Number(o.lat),
 			long: Number(o.long)
@@ -37,6 +32,12 @@ class MapRenderer {
 
 		this.maxRect = { x: minLong, y: minLat, w: longSpan, h: latSpan }
 		this.viewRect = { ...this.maxRect }
+
+		const aspectRatio = this.maxRect.w / this.maxRect.h
+		canvas.width = 1600
+		canvas.height = canvas.width / aspectRatio
+		canvas.style.width = `${canvas.width / 2}px`
+		canvas.style.height = `${canvas.height / 2}px`
 
 		canvas.onmousedown = (e: MouseEvent) => {
 			let rect = (e.target as HTMLElement).getBoundingClientRect()
@@ -132,7 +133,7 @@ class MapRenderer {
 		data.forEach(o => {
 			const x = (o.long - viewRect.x) * width / viewRect.w
 			const y = (o.lat - viewRect.y) * height / viewRect.h
-			const size = 3
+			const size = 5
 
 			ctx.beginPath()
 			ctx.arc(x, y, size, 0, 2 * Math.PI)

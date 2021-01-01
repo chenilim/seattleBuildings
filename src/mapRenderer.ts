@@ -5,7 +5,11 @@ class MapRenderer {
 
 	private maxRect: IRect = { x: 0, y: 0, w: 0, h: 0 }
 	private viewRect: IRect = { x: 0, y: 0, w: 0, h: 0 }
+
+	private isMouseDown = false
 	private mouseDownPoint: IPoint = { x: 0, y: 0 }
+
+	private overlay?: HTMLDivElement
 
 	constructor(
 		public canvas: HTMLCanvasElement,
@@ -36,14 +40,33 @@ class MapRenderer {
 
 		canvas.onmousedown = (e: MouseEvent) => {
 			let rect = (e.target as HTMLElement).getBoundingClientRect()
-	      	let x = e.clientX - rect.left
+			let x = e.clientX - rect.left
 			let y = e.clientY - rect.top
 			this.mouseDownPoint = { x, y }
+
+			this.isMouseDown = true
+		}
+
+		canvas.onmousemove = (e: MouseEvent) => {
+			if (!this.isMouseDown) {
+				return
+			}
+
+			let rect = (e.target as HTMLElement).getBoundingClientRect()
+			let x = e.clientX - rect.left
+			let y = e.clientY - rect.top
+			const p = { x, y }
+
+			this.showOverlay({
+				x: this.mouseDownPoint.x,
+				y: this.mouseDownPoint.y,
+				w: p.x - this.mouseDownPoint.x,
+				h: p.y - this.mouseDownPoint.y })
 		}
 
 		canvas.onmouseup = (e: MouseEvent) => {
 			let rect = (e.target as HTMLElement).getBoundingClientRect()
-	      	let x = e.clientX - rect.left
+			let x = e.clientX - rect.left
 			let y = e.clientY - rect.top
 			const p = { x, y }
 
@@ -60,7 +83,27 @@ class MapRenderer {
 			}
 
 			this.draw()
+			this.isMouseDown = false
+			if (this.overlay) {
+				this.overlay.remove()
+				this.overlay = undefined
+			}
 		}
+	}
+
+	showOverlay(rect: IRect) {
+		if (!this.overlay) {
+			this.overlay = document.createElement('div')
+			this.overlay.style.position = 'absolute'
+			this.overlay.style.backgroundColor = 'rgba(0, 128, 192, 0.2)'
+			this.overlay.style.zIndex = '10'
+			this.canvas.parentElement!.appendChild(this.overlay)
+		}
+
+		this.overlay.style.left = `${rect.x}px`
+		this.overlay.style.top = `${rect.y}px`
+		this.overlay.style.width = `${rect.w}px`
+		this.overlay.style.height = `${rect.h}px`
 	}
 
 	draw() {

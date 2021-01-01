@@ -1,7 +1,6 @@
 html, body {
 	margin: 0;
 	padding: 0;
-
 	font-family: 'Helvetica-Neue', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	font-size: 15px;
 }
@@ -12,12 +11,12 @@ html, body {
 	margin: 20px;
 }
 
-.frame > * {
+.frame>* {
 	display: flex;
 	flex-direction: row;
 }
 
-#header > *{
+#header>* {
 	margin-left: 10px;
 }
 
@@ -30,8 +29,9 @@ html, body {
 	flex-direction: column;
 }
 
-#mapCanvas {
+#mapFrame {
 	margin-top: 20px;
+	position: relative;
 	border: solid 1px #cccccc;
 }
 

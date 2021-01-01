@@ -9,6 +9,7 @@
 		"es6": true,
 		"browser": true
 	},
+	"extends": "eslint:recommended",
 	"settings": {
 		"import/resolver": "webpack"
 	},
@@ -113,7 +114,10 @@
 		],
 		"indent": [
 			"error",
-			"tab"
+			"tab",
+			{
+				"ObjectExpression": 1
+			}
 		],
 		"no-use-before-define": "off",
 		"@typescript-eslint/no-use-before-define": [

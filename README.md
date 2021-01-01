@@ -4,7 +4,7 @@ A simple project to demonstrate building and auto-deploying a static website to 
 
 View the [auto-generated page here](https://chenilim.github.io/seattleBuildings/).
 
-The publish-gh-pages.yml shows how to use github-pages-deploy-action to deploy to the gh-pages branch, which is used as the source of the public GitHub page.
+The `publish-gh-pages.yml` workflow shows how to use github-pages-deploy-action to deploy to the gh-pages branch, which is used as the source of the public GitHub page.
 
 Tips and tricks:
 

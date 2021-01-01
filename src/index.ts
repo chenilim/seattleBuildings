@@ -70,21 +70,9 @@ function createControls() {
 		drawChart(selectClass.value, selectNew.value, selectStatus.value)
 	}
 
-	const selectClass = document.getElementById('selectType') as HTMLSelectElement
-	selectClass.onchange = refresh
-
-	const selectNew = document.getElementById('selectNew') as HTMLSelectElement
-	selectNew.onchange = refresh
-
-	const statusList = group(allItems, o => o.status)
-
-	const selectStatus = panel.appendChild(document.createElement('select'))
-	selectStatus.appendChild(createSelectOption('', 'All'))
-	const entries = [...statusList.entries()].sort((a, b) => b[1] - a[1])
-	for (const entry of entries) {
-		selectStatus.appendChild(createSelectOption(entry[0], `${entry[0]} (${entry[1]})`))
-	}
-	selectStatus.onchange = refresh
+	const selectClass = addSelector(group(allItems, o => o.permitClass), refresh)
+	const selectNew = addSelector(group(allItems, o => o.permitSubType), refresh)
+	const selectStatus = addSelector(group(allItems, o => o.status), refresh)
 
 	// Download data
 	// const downloadLink = document.createElement('a') as HTMLAnchorElement
@@ -92,6 +80,20 @@ function createControls() {
 	// downloadLink.innerText = 'Download data'
 	// downloadLink.onclick = () => { downloadData() }
 	// panel.appendChild(downloadLink)
+}
+
+function addSelector(group: Map<any, any>, refresh: () => any) {
+	const panel = document.getElementById('header') as HTMLDivElement
+
+	const selector = panel.appendChild(document.createElement('select'))
+	selector.appendChild(createSelectOption('', 'All'))
+	const entries = [...group.entries()].sort((a, b) => b[1] - a[1])
+	for (const entry of entries) {
+		selector.appendChild(createSelectOption(entry[0], `${entry[0]} (${entry[1]})`))
+	}
+	selector.onchange = refresh
+
+	return selector
 }
 
 function downloadData() {
@@ -120,46 +122,20 @@ async function main() {
 
 	loadingLabel.remove()
 
-	// console.log('Permit classes:')
-	// const permitClasses = group(allItems, o => o.permitClass + '-' + o.permitSubClass)
-	// for (const key of permitClasses.keys()) {
-	//     console.log(`${key}: ${permitClasses.get(key)}`)
-	// }
-
-	// console.log('Permit types:')
-	// const permitTypes = group(allItems, o => o.permitType + '-' + o.permitSubType)
-	// for (const key of permitTypes.keys()) {
-	//     console.log(`${key}: ${permitTypes.get(key)}`)
-	// }
-
 	createControls()
 	drawChart('residential', 'new')
 }
 
-function drawChart(permitClass: string, isNew: string, status?: string) {
+function drawChart(permitClass?: string, subType?: string, status?: string) {
 	// let items = allItems.filter((o: any) => o.status === 'Completed' && o.completed)
 	let items = allItems
 
-	switch (permitClass) {
-		case 'residential': {
-			items = items.filter(o => o.permitClass === 'Residential')
-			break
-		}
-		case 'non-residential': {
-			items = items.filter(o => o.permitClass === 'Non-Residential')
-			break
-		}
+	if (permitClass) {
+		items = items.filter(o => o.permitClass === permitClass)
 	}
 
-	switch (isNew) {
-		case 'new': {
-			items = items.filter(o => o.permitSubType === 'New')
-			break
-		}
-		case 'existing': {
-			items = items.filter(o => o.permitSubType !== 'New')
-			break
-		}
+	if (subType) {
+		items = items.filter(o => o.permitSubType === subType)
 	}
 
 	let dateKey = 'completed'
@@ -170,7 +146,7 @@ function drawChart(permitClass: string, isNew: string, status?: string) {
 		}
 	}
 
-	const title = `${isNew.charAt(0).toUpperCase() + isNew.slice(1)} ${permitClass}`
+	const title = `${subType} ${permitClass}`
 	createChart(items, title, dateKey)
 }
 

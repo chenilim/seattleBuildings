@@ -18,7 +18,7 @@ jobs:
               uses: JamesIves/github-pages-deploy-action@3.7.1
               with:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  BRANCH: main # The branch the action should deploy to.
+                  BRANCH: gh-pages # The branch the action should deploy to.
                   FOLDER: dist # The source folder the action should deploy.
                   TARGET_FOLDER: docs
                   CLEAN: true # Automatically remove deleted files from the deploy branch

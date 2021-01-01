@@ -21,6 +21,15 @@ html, body {
 	margin-left: 10px;
 }
 
-#sidebar {
+#right {
 	font-size: 12px;
+}
+
+#left {
+	flex-direction: column;
+}
+
+#mapCanvas {
+	margin-top: 20px;
+	border: solid 1px #cccccc;
 }

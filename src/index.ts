@@ -57,15 +57,15 @@ function group(items: any[], mapper: (_: any) => any) {
 function createControls() {
 	const panel = document.getElementById('header') as HTMLDivElement
 
-	const selectClass = document.getElementById('selectType') as HTMLSelectElement
-	selectClass.onchange = (e) => {
+	const refresh = () => {
 		drawChart(selectClass.value, selectNew.value)
 	}
 
+	const selectClass = document.getElementById('selectType') as HTMLSelectElement
+	selectClass.onchange = refresh
+
 	const selectNew = document.getElementById('selectNew') as HTMLSelectElement
-	selectNew.onchange = (e) => {
-		drawChart(selectClass.value, selectNew.value)
-	}
+	selectNew.onchange = refresh
 
 	// const downloadLink = document.createElement('a') as HTMLAnchorElement
 	// downloadLink.href = '#'

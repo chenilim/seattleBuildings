@@ -38,6 +38,8 @@ async function loadData(): Promise<void> {
 	// 		city: r[24],
 	// 		state: r[25],
 	// 		zip: r[26],
+	// 		lat: r[29],
+	// 		long: r[30],
 	// 		link,
 	// 	}
 	// })

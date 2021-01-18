@@ -15,7 +15,7 @@ jobs:
                 TOKEN: ${{ secrets.SECRET_TOKEN }}
 
             - name: Replace token 2
-              run: sed -i -e 's,THE_SECRET_URL,$SECRET_URL,g' ${{ github.workspace }}/src/index.ts
+              run: sed -i -e "s,THE_SECRET_URL,$SECRET_URL,g" ${{ github.workspace }}/src/index.ts
               env:
                 SECRET_URL: ${{ secrets.SECRET_URL }}
 

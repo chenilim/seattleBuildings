@@ -121,6 +121,7 @@ function addSelector(group: Map<any, any>, refresh: () => any) {
 async function main() {
 	console.log('main')
 	console.log('token: THE_SECRET_TOKEN')
+	console.log('url: THE_SECRET_URL')
 
 	const mainPanel = document.getElementById('main')!
 	const loadingLabel = mainPanel.appendChild(document.createElement('div'))

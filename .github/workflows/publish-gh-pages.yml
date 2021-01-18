@@ -12,16 +12,16 @@ jobs:
             - name: Replace token 1
               uses: jacobtomlinson/gha-find-replace@master
               with:
-                find: THE_SECRET_TOKEN
-                replace: ${{ secrets.SECRET_TOKEN }}
-                include: ${{ github.workspace }}/src/index.ts
+                find: "THE_SECRET_TOKEN"
+                replace: "${{ secrets.SECRET_TOKEN }}"
+                include: ./src/index.ts
 
             - name: Replace token 2
               uses: jacobtomlinson/gha-find-replace@master
               with:
-                find: THE_SECRET_URL
-                replace: ${{ secrets.SECRET_URL }}
-                include: ${{ github.workspace }}/src/index.ts
+                find: "THE_SECRET_URL"
+                replace: "${{ secrets.SECRET_URL }}"
+                include: ./src/index.ts
 
             - name: Upload index.ts
               uses: actions/upload-artifact@v1

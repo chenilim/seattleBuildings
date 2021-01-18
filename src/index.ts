@@ -119,6 +119,9 @@ function addSelector(group: Map<any, any>, refresh: () => any) {
 // }
 
 async function main() {
+	console.log('main')
+	console.log('token: THE_SECRET_TOKEN')
+
 	const mainPanel = document.getElementById('main')!
 	const loadingLabel = mainPanel.appendChild(document.createElement('div'))
 	loadingLabel.innerText = 'Loading...'
